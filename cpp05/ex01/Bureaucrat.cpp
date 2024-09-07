@@ -25,7 +25,7 @@ Bureaucrat::Bureaucrat(const std::string &name, int grade) : _name(name), _grade
     std::cout
         << BG_GREEN600 "[ CONSTRUCTOR ]" RESET
         << LIME400 " Bureaucrat" RESET " "
-        << "Parametrical Constructor called: " BOLD LIME400 << _name
+        << "Parametrical Constructor called: " BOLD LIME400 << name
         << RESET << std::endl;
 
     if (_grade > MIN_GRADE)
@@ -82,30 +82,59 @@ int Bureaucrat::getGrade() const
     return this->_grade;
 }
 
-void Bureaucrat::incrementGrade(int value){
+void Bureaucrat::incrementGrade(int value)
+{
     this->_grade -= value;
 
     std::cout
         << BG_GREEN500 "[  GRADE UP   ]" RESET
         << BLUE400 " Bureaucrat" RESET " "
-        << "Grade incremented by " BOLD GREEN400 << value << RESET " to " BOLD BLUE400 << this->_grade 
+        << "Grade incremented by " BOLD GREEN400 << value << RESET " to " BOLD BLUE400 << this->_grade
         << RESET << std::endl;
-    
-    if(this->_grade < MAX_GRADE)
+
+    if (this->_grade < MAX_GRADE)
         throw Bureaucrat::GradeTooHighException();
 }
 
-void Bureaucrat::decrementGrade(int value){
+void Bureaucrat::decrementGrade(int value)
+{
     this->_grade += value;
 
     std::cout
         << BG_RED500 "[ GRADE DOWN  ]" RESET
         << BLUE400 " Bureaucrat" RESET " "
-        << "Grade decremented by " BOLD RED400 << value << RESET " to " BOLD BLUE400 << this->_grade 
+        << "Grade decremented by " BOLD RED400 << value << RESET " to " BOLD BLUE400 << this->_grade
         << RESET << std::endl;
-    
-    if(this->_grade > MIN_GRADE)
+
+    if (this->_grade > MIN_GRADE)
         throw Bureaucrat::GradeTooLowException();
+}
+
+void Bureaucrat::signForm(Form &form)
+{
+    try
+    {
+        if (form.getSigned())
+            throw Form::AlreadySigned();
+        else if (this->_grade < form.getGradeToSign())
+            throw Form::GradeTooLowException();
+        else if (this->_grade > form.getGradeToSign())
+            throw Form::GradeTooHighException();
+        form.beSigned();
+        std::cout
+            << BG_GREEN800 "[  SIGN FORM  ]" RESET
+            << BLUE400 " Bureaucrat" RESET " "
+            << "Signed form " << BOLD << PINK300 << form.getName() 
+            << RESET << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cout
+            << BG_YELLOW800 "[  SIGN FORM  ]" RESET
+            << BLUE400 " Bureaucrat " << YELLOW500 << this->getName() << RESET " "
+            << "couldn't sign " << BOLD << PINK300 << form.getName() << RESET " because " RED400 << e.what()
+            << RESET << std::endl;
+    }
 }
 
 // exceptions
@@ -120,15 +149,13 @@ const char *Bureaucrat::GradeTooHighException::what(void) const throw()
     return ("Grade too high");
 }
 
-std::ostream	&operator<<(std::ostream &out, Bureaucrat *src)
+std::ostream &operator<<(std::ostream &out, Bureaucrat *src)
 {
-	// out << src->getName() << ", bureaucraft grade " << src->getGrade() << "." << std::endl;
-
     out
         << BG_BLUE600 "[    INFO     ]" RESET
         << BLUE400 " Bureaucrat" RESET " "
-        << "Name: " BOLD PINK300 << src->getName() << RESET ", Grade: " BOLD PINK300 << src->getGrade() 
-        << RESET << std::endl;
+        << "Name: " BOLD PINK300 << src->getName() << RESET ", Grade: " BOLD PINK300 << src->getGrade()
+        << RESET;
 
-	return (out);
+    return (out);
 }

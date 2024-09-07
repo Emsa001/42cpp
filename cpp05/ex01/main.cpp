@@ -18,33 +18,26 @@ void nl(){
 
 int main(){
     try {
-        Bureaucrat Tobby("Tobby", 50);
-        Tobby.incrementGrade(10);
-        std::cout << &Tobby << std::endl;
-        Tobby.decrementGrade(10);
-        std::cout << &Tobby << std::endl;
-        Tobby.incrementGrade(30);
-        std::cout << &Tobby << std::endl;
-        Tobby.incrementGrade(30);
-        std::cout << &Tobby << std::endl;
-    } catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
-    }
-    nl();
+        Bureaucrat *Tobby = new Bureaucrat("Tobby", 50);
+        Form *DbTicket = new Form("DB Ticket", 50, 50);
 
-    try {
-        Bureaucrat Bommy("Bobby", 0);
-    } catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
-    }
-    nl();
+        nl();
 
-    try {
-        Bureaucrat Pommy("Kobby", 151);
+        std::cout << Tobby << std::endl;
+        std::cout << DbTicket << std::endl;
+
+        nl();
+
+        Tobby->signForm(*DbTicket);
+        Tobby->signForm(*DbTicket);
+
+        nl();
+        
+        Form *ICETicket = new Form("ICE Ticket", 150, 150);
+        Tobby->signForm(*ICETicket);
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
-    nl();
 
     return 0;
 }

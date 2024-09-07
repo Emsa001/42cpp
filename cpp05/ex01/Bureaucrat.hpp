@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include "Colors.hpp"
+#include "Form.hpp"
 
 #define MAX_GRADE 1
 #define MIN_GRADE 150
@@ -24,7 +25,7 @@ class Bureaucrat{
         Bureaucrat();
         Bureaucrat(const std::string &name, int grade);
         Bureaucrat(const Bureaucrat &src);
-        ~Bureaucrat();
+        virtual ~Bureaucrat();
 
         Bureaucrat &operator=(const Bureaucrat &src);
 
@@ -32,6 +33,7 @@ class Bureaucrat{
         int getGrade() const;
         void incrementGrade(int value);
         void decrementGrade(int value);
+        void signForm(Form &form);
 
     // exceptions
     class GradeTooLowException : public std::exception{

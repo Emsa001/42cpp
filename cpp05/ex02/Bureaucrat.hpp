@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 14:53:04 by escura            #+#    #+#             */
-/*   Updated: 2024/10/08 17:10:01 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/08 17:29:14 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include <iostream>
 #include "Colors.hpp"
-#include "Form.hpp"
+#include "AForm.hpp"
 
 #define MAX_GRADE 1
 #define MIN_GRADE 150

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Form.hpp                                           :+:      :+:    :+:   */
+/*   AForm.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 20:44:45 by escura            #+#    #+#             */
-/*   Updated: 2024/10/08 17:57:17 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/08 17:56:40 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,19 @@
 
 class Bureaucrat;
 
-class Form{
+class AForm{
     private:
         const std::string _name;
         const int _gradeToSign;
         const int _gradeToExecute;
         bool _isSigned;
     public:
-        Form();
-        Form(const std::string &name, const int gradeToSign, const int gradeToExecute);
-        Form(const Form &src);
-        ~Form();
+        AForm();
+        AForm(const std::string &name, const int gradeToSign, const int gradeToExecute);
+        AForm(const Form &src);
+        virtual ~AForm();
 
-        Form &operator=(const Form &src); 
+        AForm &operator=(const AForm &src); 
 
         // getters
         std::string getName() const;
@@ -41,7 +41,7 @@ class Form{
         bool getIsSigned() const;
 
         // public members
-        void beSigned(const Bureaucrat &bureaucrat);
+        virtual void beSigned(const Bureaucrat &bureaucrat) = 0;
 
     // exceptions
     class AlreadySignedException : public std::exception{

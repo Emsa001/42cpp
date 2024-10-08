@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:11:36 by escura            #+#    #+#             */
-/*   Updated: 2024/10/08 17:57:59 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/08 17:22:18 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,24 +38,7 @@ void test_correct(){
     }
 }
 
-void test_alreadySigned(){
-
-    test_title("TEST ALREADY SIGNED");
-
-    try {
-        Form veryGermanForm("VeryGermanForm", 10, 20);
-        Bureaucrat tobby("Tobby", 10);
-        nl();
-
-        tobby.signForm(veryGermanForm);
-        tobby.signForm(veryGermanForm);
-        nl();
-    } catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
-    }
-}
-
-void test_gradeTooLow(){
+void test_gradetoolow(){
 
     test_title("TEST GRADE TOO LOW");
 
@@ -72,7 +55,7 @@ void test_gradeTooLow(){
 
 }
 
-void test_gradeTooHigh(){
+void test_gradetoohigh(){
 
     test_title("TEST GRADE TOO HIGH");
 
@@ -91,9 +74,8 @@ void test_gradeTooHigh(){
 int main(){
 
     test_correct();
-    test_alreadySigned();
-    test_gradeTooLow();
-    test_gradeTooHigh();
+    test_gradetoolow();
+    test_gradetoohigh();
 
     nl();
     return 0;

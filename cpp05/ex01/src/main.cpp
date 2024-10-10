@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:11:36 by escura            #+#    #+#             */
-/*   Updated: 2024/10/10 18:10:15 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/10 18:38:03 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static void nl(int times = 0){
     for (int i = 0; i <= times; i++)
         std::cout << std::endl;
 }
-
 
 static void test_title(std::string title){
     std::cout 

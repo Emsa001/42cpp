@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 14:55:50 by escura            #+#    #+#             */
-/*   Updated: 2024/10/10 17:00:18 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/10 18:37:07 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,19 +83,21 @@ int Bureaucrat::getGrade() const
 }
 
 void Bureaucrat::incrementGrade(int value){
+    if(this->_grade - value < MAX_GRADE)
+        throw Bureaucrat::GradeTooHighException();
+    
     this->_grade -= value;
-
     std::cout
         << BG_GREEN500 "[  GRADE UP   ]" RESET
         << BLUE400 " Bureaucrat" RESET " "
         << "Grade incremented by " BOLD GREEN400 << value << RESET " to " BOLD BLUE400 << this->_grade 
         << RESET << std::endl;
-    
-    if(this->_grade < MAX_GRADE)
-        throw Bureaucrat::GradeTooHighException();
 }
 
 void Bureaucrat::decrementGrade(int value){
+    if(this->_grade + value > MIN_GRADE)
+        throw Bureaucrat::GradeTooLowException();
+
     this->_grade += value;
 
     std::cout
@@ -103,10 +105,8 @@ void Bureaucrat::decrementGrade(int value){
         << BLUE400 " Bureaucrat" RESET " "
         << "Grade decremented by " BOLD RED400 << value << RESET " to " BOLD BLUE400 << this->_grade 
         << RESET << std::endl;
-    
-    if(this->_grade > MIN_GRADE)
-        throw Bureaucrat::GradeTooLowException();
 }
+
 void Bureaucrat::signForm(AForm &form){
     try{
         form.beSigned(*this);

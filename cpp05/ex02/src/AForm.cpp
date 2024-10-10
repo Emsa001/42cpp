@@ -6,16 +6,17 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:51:13 by escura            #+#    #+#             */
-/*   Updated: 2024/10/08 17:56:42 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/10 17:30:46 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "AForm.hpp"
 
-AForm::AForm() :  _name("Unknown AForm"), 
-                _gradeToSign(10),
-                _gradeToExecute(10), 
-                _isSigned(false)
+AForm::AForm() :    _name("Unknown AForm"), 
+                    _target("Unknown Target"),
+                    _gradeToSign(10),
+                    _gradeToExecute(10), 
+                    _isSigned(false)
 {
     std::cout
         << BG_GREEN600 "[ CONSTRUCTOR ]" RESET
@@ -23,8 +24,9 @@ AForm::AForm() :  _name("Unknown AForm"),
         << "Default Constructor called" << std::endl;
 }
 
-AForm::AForm(const std::string &name, const int gradeToSign, const int gradeToExecute):
+AForm::AForm(const std::string &name, const std::string &target, const int gradeToSign, const int gradeToExecute):
     _name(name), 
+    _target(target),
     _gradeToSign(gradeToSign),
     _gradeToExecute(gradeToExecute), 
     _isSigned(false)
@@ -34,6 +36,16 @@ AForm::AForm(const std::string &name, const int gradeToSign, const int gradeToEx
         << LIME400 " AForm" RESET " "
         << "Parametrical Constructor called: " BOLD LIME400 << _name
         << RESET << std::endl;
+
+    if (gradeToSign > MIN_GRADE || gradeToExecute > MIN_GRADE)
+    {
+        throw Bureaucrat::GradeTooLowException();
+    }
+
+    if (gradeToSign < MAX_GRADE || gradeToExecute < MAX_GRADE)
+    {
+        throw Bureaucrat::GradeTooHighException();
+    }
 }
 
 AForm::AForm(const AForm &src) : _name(src._name),
@@ -74,6 +86,10 @@ std::string AForm::getName() const {
     return this->_name;
 }
 
+std::string AForm::getTarget() const {
+    return this->_target;
+}
+
 int AForm::getGradeToSign() const {
     return this->_gradeToSign;
 }
@@ -88,15 +104,23 @@ bool AForm::getIsSigned() const {
 
 
 // public memebts
-void AForm::beSigned(const Bureaucrat &bureaucrat){
+void AForm::beSigned(Bureaucrat const &bureaucrat){
     if(this->getIsSigned())
         throw AForm::AlreadySignedException();
     if(bureaucrat.getGrade() > this->getGradeToSign())
         throw AForm::GradeTooLowException();
-    if(bureaucrat.getGrade() < this->getGradeToSign())
-        throw AForm::GradeTooHighException();
     
     this->_isSigned = true;
+}
+
+void AForm::execute(Bureaucrat const &executor) const {
+    if (!this->getIsSigned())
+        throw AForm::NotSignedException();
+
+    if (executor.getGrade() > this->getGradeToExecute())
+        throw AForm::GradeTooLowException();
+    
+    this->executeImpl(executor);
 }
 
 const char *AForm::AlreadySignedException::what() const throw()
@@ -104,15 +128,21 @@ const char *AForm::AlreadySignedException::what() const throw()
     return ("Already Signed");
 }
 
-const char *AForm::GradeTooHighException::what(void) const throw()
+const char *AForm::NotSignedException::what() const throw()
 {
-    return ("Grade too high");
+    return ("Not Signed");
+}
+
+const char *AForm::GradeTooLowException::what(void) const throw()
+{
+    return ("Grade too low");
 }
 
 const char *AForm::GradeTooHighException::what(void) const throw()
 {
     return ("Grade too high");
 }
+
 
 std::ostream	&operator<<(std::ostream &out, AForm *src)
 {

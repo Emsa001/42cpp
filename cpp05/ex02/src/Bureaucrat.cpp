@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 14:55:50 by escura            #+#    #+#             */
-/*   Updated: 2024/10/08 17:16:43 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/10 17:00:18 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void Bureaucrat::decrementGrade(int value){
     if(this->_grade > MIN_GRADE)
         throw Bureaucrat::GradeTooLowException();
 }
-void Bureaucrat::signForm(Form &form){
+void Bureaucrat::signForm(AForm &form){
     try{
         form.beSigned(*this);
 
@@ -115,14 +115,34 @@ void Bureaucrat::signForm(Form &form){
             << BG_PURPLE500 "[ SIGN A FORM ]" RESET " "
             << BLUE400 << this->getName()
             << RESET " signed "
-            << TEAL400 << form.getName()
+            << BOLD TEAL400 << form.getName()
             << RESET << std::endl;
 
     } catch (const std::exception &e) {
         std::cout
             << BG_PURPLE500 "[ SIGN A FORM ]" RESET " "
             << BLUE400 << this->getName()
-            << RESET " couldn't sign " TEAL400 << form.getName() 
+            << RESET " couldn't sign " BOLD TEAL400 << form.getName() 
+            << RESET " because " RED400 << e.what()
+            << RESET << std::endl;
+    }
+}
+
+void Bureaucrat::executeForm(AForm const &form){
+    try{
+        form.execute(*this);
+
+        std::cout
+            << BG_INDIGO500 "[ EXEC A FORM ]" RESET " "
+            << BLUE400 << this->getName()
+            << RESET " executed "
+            << TEAL400 << form.getName()
+            << RESET << std::endl;
+    } catch (const std::exception &e) {
+        std::cout
+            << BG_INDIGO500 "[ EXEC A FORM ]" RESET " "
+            << BLUE400 << this->getName()
+            << RESET " couldn't execute " BOLD TEAL400 << form.getName() 
             << RESET " because " RED400 << e.what()
             << RESET << std::endl;
     }

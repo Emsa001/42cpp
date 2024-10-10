@@ -6,12 +6,12 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 20:44:45 by escura            #+#    #+#             */
-/*   Updated: 2024/10/08 17:56:40 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/10 17:01:54 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FORM_HPP
-# define FORM_HPP
+#ifndef AFORM_HPP
+# define AFORM_HPP
 
 #include <iostream>
 #include <stdbool.h>
@@ -23,28 +23,38 @@ class Bureaucrat;
 class AForm{
     private:
         const std::string _name;
+        const std::string _target;
         const int _gradeToSign;
         const int _gradeToExecute;
         bool _isSigned;
+        
     public:
         AForm();
-        AForm(const std::string &name, const int gradeToSign, const int gradeToExecute);
-        AForm(const Form &src);
+        AForm(const std::string &name, const std::string &target, const int gradeToSign, const int gradeToExecute);
+        AForm(const AForm &src);
         virtual ~AForm();
 
         AForm &operator=(const AForm &src); 
 
         // getters
         std::string getName() const;
+        std::string getTarget() const;
         int getGradeToSign() const;
         int getGradeToExecute() const;
         bool getIsSigned() const;
 
         // public members
-        virtual void beSigned(const Bureaucrat &bureaucrat) = 0;
+        void beSigned(Bureaucrat const  &bureaucrat);
+        void execute(Bureaucrat const &executor) const;
+        virtual void executeImpl(Bureaucrat const &executor) const = 0;
 
     // exceptions
     class AlreadySignedException : public std::exception{
+        public:
+            const char* what() const throw();
+    };
+
+    class NotSignedException : public std::exception{
         public:
             const char* what() const throw();
     };

@@ -6,31 +6,35 @@
 #    By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/22 13:20:49 by escura            #+#    #+#              #
-#    Updated: 2024/08/22 14:51:35 by escura           ###   ########.fr        #
+#    Updated: 2024/10/10 17:51:06 by escura           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = ex00
+NAME = ex02
 
 CC = c++
-FLAGS = -Wall -Wextra -Werror -std=c++98
+CFLAGS = -Wall -Wextra -Werror -std=c++98
+CFLAGS += -I./includes
 
 SRC = $(wildcard *.cpp) $(wildcard */*.cpp)
-OBJ = $(SRC:.cpp=.o)
+OBJ_DIR = .obj
+OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.cpp=.o))
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(FLAGS) $(OBJ) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) -o $(NAME)
 
-%.o: %.cpp
-	$(CC) $(FLAGS) -c $< -o $@
+$(OBJ_DIR)/%.o: %.cpp
+	mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	rm -f $(NAME)
+	rm -f ./*.txt
 
 re: fclean
 	$(MAKE) all

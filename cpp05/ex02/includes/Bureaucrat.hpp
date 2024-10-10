@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 14:53:04 by escura            #+#    #+#             */
-/*   Updated: 2024/10/08 17:29:14 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/10 16:58:49 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #define MAX_GRADE 1
 #define MIN_GRADE 150
 
-class Form;
+class AForm;
 
 class Bureaucrat{
     private:
@@ -38,7 +38,8 @@ class Bureaucrat{
         int getGrade() const;
         void incrementGrade(int value);
         void decrementGrade(int value);
-        void signForm(Form &form);
+        void signForm(AForm &form);
+        void executeForm(AForm const &form);
 
     // exceptions
     class GradeTooLowException : public std::exception{

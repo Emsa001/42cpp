@@ -1,60 +1,72 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Form.cpp                                           :+:      :+:    :+:   */
+/*   AForm.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:51:13 by escura            #+#    #+#             */
-/*   Updated: 2024/10/08 17:57:01 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/10 17:30:56 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Form.hpp"
+#include "AForm.hpp"
 
-Form::Form() :  _name("Unknown Form"), 
-                _gradeToSign(10),
-                _gradeToExecute(10), 
-                _isSigned(false)
+AForm::AForm() :    _name("Unknown AForm"), 
+                    _target("Unknown Target"),
+                    _gradeToSign(10),
+                    _gradeToExecute(10), 
+                    _isSigned(false)
 {
     std::cout
         << BG_GREEN600 "[ CONSTRUCTOR ]" RESET
-        << LIME400 " Form" RESET " "
+        << LIME400 " AForm" RESET " "
         << "Default Constructor called" << std::endl;
 }
 
-Form::Form(const std::string &name, const int gradeToSign, const int gradeToExecute):
+AForm::AForm(const std::string &name, const std::string &target, const int gradeToSign, const int gradeToExecute):
     _name(name), 
+    _target(target),
     _gradeToSign(gradeToSign),
     _gradeToExecute(gradeToExecute), 
     _isSigned(false)
 {
     std::cout
         << BG_GREEN600 "[ CONSTRUCTOR ]" RESET
-        << LIME400 " Form" RESET " "
+        << LIME400 " AForm" RESET " "
         << "Parametrical Constructor called: " BOLD LIME400 << _name
         << RESET << std::endl;
+
+    if (gradeToSign > MIN_GRADE || gradeToExecute > MIN_GRADE)
+    {
+        throw Bureaucrat::GradeTooLowException();
+    }
+
+    if (gradeToSign < MAX_GRADE || gradeToExecute < MAX_GRADE)
+    {
+        throw Bureaucrat::GradeTooHighException();
+    }
 }
 
-Form::Form(const Form &src) : _name(src._name),
+AForm::AForm(const AForm &src) : _name(src._name),
                               _gradeToSign(src._gradeToSign),
                               _gradeToExecute(src._gradeToExecute),
                               _isSigned(src._isSigned)
 {
     std::cout
         << BG_GREEN600 "[ CONSTRUCTOR ]" RESET
-        << LIME400 " Form" RESET " "
+        << LIME400 " AForm" RESET " "
         << "Copy Constructor called" << std::endl;
 }
 
-Form::~Form(){
+AForm::~AForm(){
     std::cout
         << BG_RED600 "[ DESTRUCTOR  ]" RESET
-        << RED400 " Form" RESET " "
+        << RED400 " AForm" RESET " "
         << "Destructor called" << std::endl;
 }
 
-Form &Form::operator=(const Form &src)
+AForm &AForm::operator=(const AForm &src)
 {
     if (this == &src)
         return *this;
@@ -70,55 +82,73 @@ Form &Form::operator=(const Form &src)
 }
 
 // getters
-std::string Form::getName() const {
+std::string AForm::getName() const {
     return this->_name;
 }
 
-int Form::getGradeToSign() const {
+std::string AForm::getTarget() const {
+    return this->_target;
+}
+
+int AForm::getGradeToSign() const {
     return this->_gradeToSign;
 }
 
-int Form::getGradeToExecute() const {
+int AForm::getGradeToExecute() const {
     return this->_gradeToExecute;
 }
 
-bool Form::getIsSigned() const {
+bool AForm::getIsSigned() const {
     return this->_isSigned;
 }
 
 
 // public memebts
-void Form::beSigned(const Bureaucrat &bureaucrat){
+void AForm::beSigned(Bureaucrat const &bureaucrat){
     if(this->getIsSigned())
-        throw Form::AlreadySignedException();
+        throw AForm::AlreadySignedException();
     if(bureaucrat.getGrade() > this->getGradeToSign())
-        throw Form::GradeTooLowException();
-    if(bureaucrat.getGrade() < this->getGradeToSign())
-        throw Form::GradeTooHighException();
+        throw AForm::GradeTooLowException();
     
     this->_isSigned = true;
 }
 
-const char *Form::AlreadySignedException::what() const throw()
+void AForm::execute(Bureaucrat const &executor) const {
+    if (!this->getIsSigned())
+        throw AForm::NotSignedException();
+
+    if (executor.getGrade() > this->getGradeToExecute())
+        throw AForm::GradeTooLowException();
+    
+    this->executeImpl(executor);
+}
+
+const char *AForm::AlreadySignedException::what() const throw()
 {
     return ("Already Signed");
 }
 
-const char *Form::GradeTooLowException::what() const throw()
+const char *AForm::NotSignedException::what() const throw()
+{
+    return ("Not Signed");
+}
+
+const char *AForm::GradeTooLowException::what(void) const throw()
 {
     return ("Grade too low");
 }
 
-const char *Form::GradeTooHighException::what(void) const throw()
+const char *AForm::GradeTooHighException::what(void) const throw()
 {
     return ("Grade too high");
 }
 
-std::ostream	&operator<<(std::ostream &out, Form *src)
+
+std::ostream	&operator<<(std::ostream &out, AForm *src)
 {
     out
         << BG_BLUE600 "[    INFO     ]" RESET
-        << BLUE400 " Form"
+        << BLUE400 " AForm"
         << RESET "Name: " BOLD PINK300 << src->getName() 
         << RESET ", Grade to sign: " BOLD PINK300 << src->getGradeToSign() 
         << RESET ", Grade to execute: " BOLD PINK300 << src->getGradeToExecute() 

@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:11:36 by escura            #+#    #+#             */
-/*   Updated: 2024/10/10 18:38:03 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/11 16:53:59 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,16 @@ void test_correct(){
         Form veryGermanForm("VeryGermanForm", 10, 20);
         Bureaucrat tobby("Tobby", 10);
         nl();
+        
+        std::cout << &tobby << std::endl;
+        std::cout << &veryGermanForm << std::endl;
+        nl();
 
         tobby.signForm(veryGermanForm);
+        nl();
+
+        std::cout << &tobby << std::endl;
+        std::cout << &veryGermanForm << std::endl;
         nl();
     } catch (const std::exception &e) {
         std::cerr

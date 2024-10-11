@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 20:44:45 by escura            #+#    #+#             */
-/*   Updated: 2024/10/08 17:57:17 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/11 15:48:41 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,6 @@ class Form{
     };
 };
 
+std::ostream	&operator<<(std::ostream &out, Form *src);
 
 #endif

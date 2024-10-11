@@ -6,13 +6,13 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 14:55:50 by escura            #+#    #+#             */
-/*   Updated: 2024/10/10 18:37:15 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/11 17:30:15 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./Bureaucrat.hpp"
 
-Bureaucrat::Bureaucrat() : _name("Thomas")
+Bureaucrat::Bureaucrat() : _name("Thomas"), _grade(150)
 {
     std::cout
         << BG_GREEN600 "[ CONSTRUCTOR ]" RESET
@@ -162,13 +162,11 @@ const char *Bureaucrat::GradeTooHighException::what(void) const throw()
 
 std::ostream	&operator<<(std::ostream &out, Bureaucrat *src)
 {
-	// out << src->getName() << ", bureaucraft grade " << src->getGrade() << "." << std::endl;
-
     out
         << BG_BLUE600 "[    INFO     ]" RESET
         << BLUE400 " Bureaucrat" RESET " "
         << "Name: " BOLD PINK300 << src->getName() << RESET ", Grade: " BOLD PINK300 << src->getGrade() 
-        << RESET << std::endl;
+        << RESET;
 
 	return (out);
 }

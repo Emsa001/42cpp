@@ -6,7 +6,7 @@
 #    By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/22 13:20:49 by escura            #+#    #+#              #
-#    Updated: 2024/10/10 17:40:59 by escura           ###   ########.fr        #
+#    Updated: 2024/10/11 16:54:48 by escura           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,6 @@ clean:
 
 fclean: clean
 	rm -f $(NAME)
-	rm -f ./*.txt
 
 re: fclean
 	$(MAKE) all

@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:11:36 by escura            #+#    #+#             */
-/*   Updated: 2024/10/10 18:10:43 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/11 17:35:18 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,39 @@ void test_subject()
 
         Bureaucrat b("Bender", 1);
         b.signForm(*rrf);
+        nl();
         b.executeForm(*rrf);
+        nl();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr
+            << BG_RED500 "[  EXCEPTION  ]" RESET " "
+            << RED400 << e.what()
+            << RESET << std::endl;
+    }
+}
+
+void test_all_forms(){
+    test_title("TEST ALL FORMS");
+
+    try
+    {
+        Intern tobby;
+        AForm *veryGermanForm;
+        nl();
+        
+        veryGermanForm = tobby.makeForm("shrubbery creation", "Boo");
+        nl();
+        veryGermanForm = tobby.makeForm("robotomy request", "Clyde");
+        nl();
+        veryGermanForm = tobby.makeForm("presidential pardon", "Lincoln Burrows");
+        nl();
+
+        Bureaucrat b("Bender", 1);
+        nl();
+        b.signForm(*veryGermanForm);
+        b.executeForm(*veryGermanForm);
         nl();
     }
     catch (const std::exception &e)
@@ -58,6 +90,7 @@ int main()
     srand(time(NULL));
 
     test_subject();
+    test_all_forms();
 
     nl();
     return 0;

@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 17:09:56 by escura            #+#    #+#             */
-/*   Updated: 2024/10/10 17:25:35 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/11 17:34:10 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,16 @@ Intern::Intern(const Intern &src)
     Intern::operator=(src);
 }
 
-Intern::~Intern(){
+Intern::~Intern()
+{
     std::cout
         << BG_RED600 "[ DESTRUCTOR  ]" RESET
         << RED400 " Intern" RESET " "
         << "Destructor called" << std::endl;
 }
 
-Intern &Intern::operator=(const Intern &src){
+Intern &Intern::operator=(const Intern &src)
+{
     if (this == &src)
         return *this;
 
@@ -57,16 +59,41 @@ const char *Intern::UnknownFormException::what() const throw()
     return ("I don't know how to form this form");
 }
 
-AForm* Intern::makeForm(const std::string &type, const std::string &target){
-    switch(type[0]){
-        case 's':
-            return new ShrubberyCreationForm(target);
-        case 'r':
-            return new RobotomyRequestForm(target);
-        case 'p':
-            return new PresidentialPardonForm(target);
-        default:
-            throw Intern::UnknownFormException();
+// Static member functions definitions
+AForm *Intern::createShrubberyForm(const std::string target)
+{
+    return new ShrubberyCreationForm(target);
+}
+
+AForm *Intern::createRobotomyForm(const std::string target)
+{
+    return new RobotomyRequestForm(target);
+}
+
+AForm *Intern::createPresidentialPardonForm(const std::string target)
+{
+    return new PresidentialPardonForm(target);
+}
+
+AForm *Intern::makeForm(const std::string &type, const std::string &target)
+{
+    AForm *(*formPointers[3])(std::string target) = {
+        Intern::createShrubberyForm,
+        Intern::createRobotomyForm,
+        Intern::createPresidentialPardonForm};
+    const std::string formNames[3] = {"shrubbery creation", "robotomy request", "presidential pardon"};
+
+    for (int i = 0; i < 3; i++)
+    {
+        if (formNames[i] == type)
+        {
+            std::cout
+                << BG_BLUE600 "[   FORMED    ]" RESET
+                << BLUE400 " Intern" RESET " "
+                << "Formed a " << type << " form" << std::endl;
+            
+            return formPointers[i](target);
+        }
     }
 
     throw Intern::UnknownFormException();

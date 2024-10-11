@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:51:13 by escura            #+#    #+#             */
-/*   Updated: 2024/10/10 17:30:46 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/11 16:53:04 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,13 +147,12 @@ const char *AForm::GradeTooHighException::what(void) const throw()
 std::ostream	&operator<<(std::ostream &out, AForm *src)
 {
     out
-        << BG_BLUE600 "[    INFO     ]" RESET
-        << BLUE400 " AForm"
-        << RESET "Name: " BOLD PINK300 << src->getName() 
+        << BG_BLUE600 "[  FORM INFO  ]"
+        << RESET " Name: " BOLD PINK300 << src->getName() 
         << RESET ", Grade to sign: " BOLD PINK300 << src->getGradeToSign() 
         << RESET ", Grade to execute: " BOLD PINK300 << src->getGradeToExecute() 
-        << RESET ", Signed: " BOLD PINK300 << src->getIsSigned() 
-        << RESET << std::endl;
+        << RESET ", Signed: " BOLD PINK300 << (src->getIsSigned() ? GREEN400"true" : RED400"false")
+        << RESET;
 
 	return (out);
 }

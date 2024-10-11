@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:11:36 by escura            #+#    #+#             */
-/*   Updated: 2024/10/11 17:35:18 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/11 17:38:08 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void test_subject()
         nl();
         b.executeForm(*rrf);
         nl();
+
+        delete rrf;
     }
     catch (const std::exception &e)
     {
@@ -61,13 +63,15 @@ void test_all_forms(){
     {
         Intern tobby;
         AForm *veryGermanForm;
+        AForm *veryPolishForm;
+        AForm *veryAmericanForm;
         nl();
         
         veryGermanForm = tobby.makeForm("shrubbery creation", "Boo");
         nl();
-        veryGermanForm = tobby.makeForm("robotomy request", "Clyde");
+        veryPolishForm = tobby.makeForm("robotomy request", "Clyde");
         nl();
-        veryGermanForm = tobby.makeForm("presidential pardon", "Lincoln Burrows");
+        veryAmericanForm = tobby.makeForm("presidential pardon", "Lincoln Burrows");
         nl();
 
         Bureaucrat b("Bender", 1);
@@ -75,6 +79,10 @@ void test_all_forms(){
         b.signForm(*veryGermanForm);
         b.executeForm(*veryGermanForm);
         nl();
+
+        delete veryGermanForm;
+        delete veryPolishForm;
+        delete veryAmericanForm;
     }
     catch (const std::exception &e)
     {

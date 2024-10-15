@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 20:30:59 by escura            #+#    #+#             */
-/*   Updated: 2024/10/14 21:38:00 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/15 19:14:26 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,35 @@ static void test_title(std::string title){
         << std::endl;
 }
 
+static void test_multiple(){
+    std::string test[] = {
+        "0",
+        "0.0",
+        "42",
+        "42.0",
+        "42.42f",
+        "-4.2",
+        "4.2",
+        "-inff",
+        "+inff",
+        "nanf",
+        "-inf",
+        "+inf",
+        "nan",
+        ""
+    };
+
+    for (int i = 0; !test[i].empty(); i++)
+    {
+        test_title("Converting " + test[i]);
+        ScalarConverter::convert(test[i]);
+    }
+}
+
 int main(int argc, char **argv)
 {
+    test_multiple();
+
     if (argc != 2)
     {
         std::cout
@@ -38,6 +65,5 @@ int main(int argc, char **argv)
     ScalarConverter::convert(argv[1]);
 
     nl();
-    
     return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 20:30:51 by escura            #+#    #+#             */
-/*   Updated: 2024/10/14 21:44:03 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/15 19:18:02 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ double ScalarConverter::convertToDouble(const std::string &str) {
 }
 
 char ScalarConverter::convertToChar(const std::string &str) {
-    if (str.length() == 1 && isprint(str[0])) {
+    if (str.length() == 1 && !isdigit(str[0])) {
         return str[0];
     } else {
         int intValue = convertToInt(str);
@@ -125,12 +125,22 @@ void ScalarConverter::convert(const std::string &str){
     std::string typeFloat = tryConvert(str, &convertToFloat, "f");
     std::string typeDouble = tryConvert(str, &convertToDouble, " ");
 
-    if(str == "inf" || str == "inf" || str == "nan")
+    if(str == "inf" || str == "nan")
     {
         typeFloat = str + "f";
         typeDouble = str;
     }
-    if(str == "inff" || str == "inff" || str == "nanf")
+    else if(str == "inff" || str == "nanf")
+    {
+        typeFloat = str;
+        typeDouble = str.substr(0, str.length() - 1);
+    }
+    else if(str == "+inf" || str == "+nan" || str == "-inf" || str == "-nan")
+    {
+        typeFloat = str + "f";
+        typeDouble = str;
+    }
+    else if(str == "+inff" || str == "+nanf" || str == "-inff" || str == "-nanf")
     {
         typeFloat = str;
         typeDouble = str.substr(0, str.length() - 1);

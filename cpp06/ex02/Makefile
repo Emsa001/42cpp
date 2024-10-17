@@ -6,11 +6,11 @@
 #    By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/11 18:26:17 by escura            #+#    #+#              #
-#    Updated: 2024/10/17 19:11:26 by escura           ###   ########.fr        #
+#    Updated: 2024/10/17 19:11:20 by escura           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = ex00
+NAME = ex01
 
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
@@ -40,7 +40,7 @@ re: fclean
 
 run: $(NAME)
 	clear
-	./$(NAME) 42.42
+	./$(NAME)
 
 v: $(NAME)
 	valgrind --leak-check=full ./$(NAME)

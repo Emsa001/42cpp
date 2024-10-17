@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 20:30:59 by escura            #+#    #+#             */
-/*   Updated: 2024/10/15 19:14:26 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/17 19:10:30 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,45 +23,44 @@ static void test_title(std::string title){
         << std::endl;
 }
 
-static void test_multiple(){
-    std::string test[] = {
-        "0",
-        "0.0",
-        "42",
-        "42.0",
-        "42.42f",
-        "-4.2",
-        "4.2",
-        "-inff",
-        "+inff",
-        "nanf",
-        "-inf",
-        "+inf",
-        "nan",
-        ""
-    };
-
-    for (int i = 0; !test[i].empty(); i++)
-    {
-        test_title("Converting " + test[i]);
-        ScalarConverter::convert(test[i]);
-    }
-}
 
 int main(int argc, char **argv)
 {
-    test_multiple();
+    // ScalarConverter *convert = new ScalarConverter(); 
+    // ScalarConverter convert2;
 
     if (argc != 2)
     {
-        std::cout
+        nl();
+        std::cerr
             << BG_RED800 "[  ARG ERROR  ]" RESET
             << RED400 " Correct Usage:" RESET " "
             << argv[0] << " <arg>" << std::endl;
+        nl();
         return (1);
     }
 
-    test_title("Converting " + std::string(argv[1]));
+
+    std::string typeStr;
+    switch(ScalarConverter::getInputType(argv[1])){
+        case 'i':
+            typeStr = "int";
+            break;
+        case 'f':
+            typeStr = "float";
+            break;
+        case 'd':
+            typeStr = "double";
+            break;
+        case 'c':
+            typeStr = "char";
+            break;
+        default:
+            typeStr = "unknown";
+            break;
+    }
+
+    test_title("Converting " PURPLE800 + std::string(argv[1]) + BG_STONE200 GRAY900 " as: " + PURPLE800 + typeStr);
     ScalarConverter::convert(argv[1]);
 
     nl();

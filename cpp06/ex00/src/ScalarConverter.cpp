@@ -6,7 +6,7 @@
 /*   By: escura <escura@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 20:30:51 by escura            #+#    #+#             */
-/*   Updated: 2024/10/15 19:18:02 by escura           ###   ########.fr       */
+/*   Updated: 2024/10/17 16:56:02 by escura           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,6 @@ ScalarConverter::ScalarConverter(const ScalarConverter &src)
     ScalarConverter::operator=(src);
 }
 
-ScalarConverter::~ScalarConverter()
-{
-    std::cout
-        << BG_RED600 "[ DESTRUCTOR  ]" RESET
-        << RED400 " ScalarConverter" RESET " "
-        << "Destructor called" << std::endl;
-}
-
 ScalarConverter &ScalarConverter::operator=(const ScalarConverter &src)
 {
     if (this == &src)
@@ -51,105 +43,158 @@ ScalarConverter &ScalarConverter::operator=(const ScalarConverter &src)
     return *this;
 }
 
-template<typename T>
-T convertTo(const std::string &str, T (*convertFunc)(const char*, char**, int)) {
-    T value;
-    char* endptr;
-    errno = 0;
+ScalarConverter::~ScalarConverter()
+{
+    std::cout
+        << BG_RED600 "[ DESTRUCTOR  ]" RESET
+        << RED400 " ScalarConverter" RESET " "
+        << "Destructor called" << std::endl;
+}
 
-    value = convertFunc(str.c_str(), &endptr, 10);
-    if (endptr == str.c_str() || errno == ERANGE) {
+// public members
+
+long int ScalarConverter::convertToInt(const std::string &str)
+{
+    char *endptr;
+    long int value = std::strtol(str.c_str(), &endptr, 10);
+
+    if (*endptr != '\0' || value > INT_MAX || value < INT_MIN)
         throw std::runtime_error("Impossible");
-    }
     return value;
 }
 
-template<typename T>
-T convertTo(const std::string &str, T (*convertFunc)(const char*, char**)) {
-    T value;
-    char* endptr;
-    errno = 0;
+float ScalarConverter::convertToFloat(const std::string &str)
+{
+    char *endptr;
+    float value = std::strtof(str.substr(0, str.length() - 1).c_str(), &endptr);
 
-    value = convertFunc(str.c_str(), &endptr);
-    if (endptr == str.c_str() || errno == ERANGE) {
+    if (*endptr != '\0' || value > std::numeric_limits<float>::max() || value < -std::numeric_limits<float>::max() || str[str.length() - 1] != 'f'){
         throw std::runtime_error("Impossible");
     }
+
     return value;
 }
 
-int ScalarConverter::convertToInt(const std::string &str) {
-    long int value = convertTo<long int>(str, std::strtol);
-    if(value > INT_MAX || value < INT_MIN)
+double ScalarConverter::convertToDouble(const std::string &str)
+{
+    char *endptr;
+    double value = std::strtod(str.c_str(), &endptr);
+
+    if (*endptr != '\0' || value > std::numeric_limits<double>::max() || value < -std::numeric_limits<double>::max() || !is_num(str))
         throw std::runtime_error("Impossible");
-    return static_cast<int>(value);
+    return value;
 }
 
-float ScalarConverter::convertToFloat(const std::string &str) {
-    return convertTo<float>(str, std::strtof);
-}
-
-double ScalarConverter::convertToDouble(const std::string &str) {
-    return convertTo<double>(str, std::strtod);
-}
-
-char ScalarConverter::convertToChar(const std::string &str) {
-    if (str.length() == 1 && !isdigit(str[0])) {
-        return str[0];
-    } else {
-        int intValue = convertToInt(str);
-        char c = static_cast<char>(intValue);
-        if (!isprint(c)) {
-            throw std::runtime_error("Non displayable");
-        }
-        return c;
-    }
-}
-
-template<typename Func>
-std::string tryConvert(const std::string &str, Func convertFunc, const std::string &suffix = "") {
+std::string ScalarConverter::tryConvert(const std::string &str, char type) {
     std::stringstream temp;
+    
+    char charType;
+    long int intType;
+    float floatType;
+    double doubleType;
+
     try {
-        temp << convertFunc(str);
-        std::string result = temp.str();
-        if (!suffix.empty() && result.find('.') == std::string::npos)
-            result += ".0";
-        return result + (suffix != " " ? suffix : "");
+        const std::string specialCase = specialCases(str, type);
+        if (!specialCase.empty())
+            return specialCase;
+
+        char inputType = getInputType(str);
+
+        switch (inputType) {
+            case 'c':
+                charType = str[0];
+                switch (type) {
+                    case 'f': floatType = static_cast<float>(charType); break;
+                    case 'd': doubleType = static_cast<double>(charType); break;
+                    case 'i': intType = static_cast<long int>(charType); break;
+                }
+                break;
+
+            case 'i':
+                intType = convertToInt(str);
+                switch (type) {
+                    case 'f': floatType = static_cast<float>(intType); break;
+                    case 'd': doubleType = static_cast<double>(intType); break;
+                    case 'c':
+                        if (intType < CHAR_MIN || intType > CHAR_MAX)
+                            throw std::runtime_error("Impossible");
+                        charType = static_cast<char>(intType);
+                        break;
+                }
+                break;
+
+            case 'f':
+                floatType = convertToFloat(str);
+                switch (type) {
+                    case 'd': doubleType = static_cast<double>(floatType); break;
+                    case 'i': 
+                        if (floatType > INT_MAX || floatType < INT_MIN)
+                            throw std::runtime_error("Impossible");
+                        intType = static_cast<long int>(floatType); 
+                        break;
+                    case 'c':
+                        if (floatType < CHAR_MIN || floatType > CHAR_MAX)
+                            throw std::runtime_error("Impossible");
+                        charType = static_cast<char>(floatType); 
+                        break;
+                }
+                break;
+
+            case 'd':
+                doubleType = convertToDouble(str);
+                switch (type) {
+                    case 'f':
+                        if (doubleType > std::numeric_limits<float>::max() || doubleType < -std::numeric_limits<float>::max())
+                            throw std::runtime_error("Impossible");
+                        floatType = static_cast<float>(doubleType);
+                        break;
+                    case 'i':
+                        if (doubleType > INT_MAX || doubleType < INT_MIN)
+                            throw std::runtime_error("Impossible");
+                        intType = static_cast<long int>(doubleType); 
+                        break;
+                    case 'c':
+                        if (doubleType < CHAR_MIN || doubleType > CHAR_MAX)
+                            throw std::runtime_error("Impossible");
+                        charType = static_cast<char>(doubleType);
+                        break;
+                }
+                break;
+
+            default:
+                throw std::runtime_error("Impossible");
+        }
+
+        switch (type) {
+            case 'c': temp << charType; break;
+            case 'i': temp << intType; break;
+            case 'f': temp << floatType; break;
+            case 'd': temp << doubleType; break;
+            default: throw std::runtime_error("Impossible");
+        }
+        
+            
+        return formatOutput(temp, type);
+
     } catch (const std::exception &e) {
         return e.what();
     }
 }
 
-void ScalarConverter::convert(const std::string &str){
-    std::string typeChar = tryConvert(str, &convertToChar);
-    std::string typeInt = tryConvert(str, &convertToInt);
-    std::string typeFloat = tryConvert(str, &convertToFloat, "f");
-    std::string typeDouble = tryConvert(str, &convertToDouble, " ");
+void ScalarConverter::convert(const std::string &str)
+{
+    std::string typeChar = tryConvert(str, 'c');
+    std::string typeInt = tryConvert(str, 'i');
+    std::string typeFloat = tryConvert(str, 'f');
+    std::string typeDouble = tryConvert(str, 'd');
 
-    if(str == "inf" || str == "nan")
-    {
-        typeFloat = str + "f";
-        typeDouble = str;
-    }
-    else if(str == "inff" || str == "nanf")
-    {
-        typeFloat = str;
-        typeDouble = str.substr(0, str.length() - 1);
-    }
-    else if(str == "+inf" || str == "+nan" || str == "-inf" || str == "-nan")
-    {
-        typeFloat = str + "f";
-        typeDouble = str;
-    }
-    else if(str == "+inff" || str == "+nanf" || str == "-inff" || str == "-nanf")
-    {
-        typeFloat = str;
-        typeDouble = str.substr(0, str.length() - 1);
-    }
-
-    std::cout 
-        << BOLD  BG_PINK500   "char  :" << RESET " " PINK400 << typeChar << "\n" << RESET
-        << BOLD  BG_PURPLE500 "int   :" << RESET " " PURPLE400 <<  typeInt << "\n" << RESET
-        << BOLD  BG_VIOLET500 "float :" << RESET " " VIOLET400 <<  typeFloat << "\n" << RESET
-        << BOLD  BG_INDIGO500 "double:" << RESET " " INDIGO400 << typeDouble << RESET
+    std::cout
+        << BOLD BG_PINK500 "char  :" << RESET " " PINK400 << typeChar << "\n"
+        << RESET
+        << BOLD BG_PURPLE500 "int   :" << RESET " " PURPLE400 << typeInt << "\n"
+        << RESET
+        << BOLD BG_VIOLET500 "float :" << RESET " " VIOLET400 << typeFloat << "\n"
+        << RESET
+        << BOLD BG_INDIGO500 "double:" << RESET " " INDIGO400 << typeDouble << RESET
         << std::endl;
 }
